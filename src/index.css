@@ -16,3 +16,7 @@
 @theme {
   --font-inter: "Inter", sans-serif;
 }
+
+.lucide {
+  stroke-width: 1.5;
+}
