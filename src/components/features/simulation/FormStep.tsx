@@ -4,7 +4,8 @@ import { Input } from "../../shared/Input"
 import { Button } from "../../shared/Button"
 import { ArrowLeft, ArrowRight } from "lucide-react"
 
-interface FormStepProps {
+export interface FormStepProps {
+  id: string
   icon: LucideIcon
   title: string
   question: string
