@@ -5,6 +5,7 @@ import { Button } from "../../shared/Button"
 import { ArrowLeft, ArrowRight } from "lucide-react"
 import type { SyntheticEvent } from "react"
 import { useState } from "react"
+import { formatCurrencyMask } from "../../../utils/currency"
 
 export interface FormStepProps {
   id: string
@@ -61,7 +62,11 @@ export function FormStep({
         <Input
           {...inputProps}
           value={inputValue}
-          onChange={(e) => setInputValue(e.target.value)}
+          onChange={(e) => {
+            const isCurrency = inputProps.prefix === "R$"
+            const value = e.target.value
+            setInputValue(isCurrency ? formatCurrencyMask(value) : value)
+          }}
         />
         <div className="flex flex-col gap-3 sm:flex-row sm:gap-6">
           {!hideBackButton && (
