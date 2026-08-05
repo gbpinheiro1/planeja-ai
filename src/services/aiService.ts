@@ -6,12 +6,29 @@ interface GeminiResponse {
   }[]
 }
 
-const API_KEY = import.meta.env.VITE_GEMINI_API_KEY
-
-if (!API_KEY) {
-  throw new Error("A chave de API do Gemini não está definida no arquivo .env")
+export interface InsightData {
+  feasibility: {
+    status: "viable" | "needs_adjustment" | "unfeasible"
+    content: string
+  }
+  diagnosis: {
+    content: string
+  }
+  suggestions: {
+    items: string[]
+  }
+  extraIncome: {
+    items: string[]
+  }
+  investment: {
+    items: string[]
+  }
+  motivation: {
+    content: string
+  }
 }
 
+const API_KEY = String(import.meta.env.VITE_GEMINI_API_KEY)
 const MODEL_NAME = "gemini-flash-latest"
 const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/${MODEL_NAME}:generateContent?key=${API_KEY}`
 
@@ -29,18 +46,6 @@ const callGeminiAPI = async (prompt: string) => {
   }
 
   return (await response.json()) as GeminiResponse
-}
-
-export interface InsightData {
-  feasibility: {
-    status: "viable" | "needs_adjustment" | "unfeasible"
-    content: string
-  }
-  diagnosis: { content: string }
-  suggestions: { items: string[] }
-  extraIncome: { items: string[] }
-  investment: { items: string[] }
-  motivation: { content: string }
 }
 
 export const getInsight = async (prompt: string) => {
