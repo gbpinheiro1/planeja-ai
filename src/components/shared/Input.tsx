@@ -1,15 +1,22 @@
 import type { InputHTMLAttributes } from "react"
 
 import { Divider } from "./Divider"
+import { twMerge } from "tailwind-merge"
 
 export interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   prefix?: string
   suffix?: string
+  className?: string
 }
 
-export function Input({ prefix, suffix, ...rest }: InputProps) {
+export function Input({ className, prefix, suffix, ...rest }: InputProps) {
   return (
-    <div className="bg-input flex items-center rounded-2xl p-4 shadow-[4px_4px_18px_0px_rgba(0,0,0,0.2)]">
+    <div
+      className={twMerge(
+        "bg-input flex items-center rounded-2xl p-4 shadow-[4px_4px_18px_0px_rgba(0,0,0,0.2)]",
+        className,
+      )}
+    >
       {prefix && (
         <>
           <span className="text-muted-foreground text-sm font-medium">

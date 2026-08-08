@@ -2,8 +2,11 @@ import type { PropsWithChildren } from "react"
 
 import type { InsightData } from "../../../services/aiService"
 
+import { twMerge } from "tailwind-merge"
+
 interface ContentProps {
   insight: InsightData
+  className?: string
 }
 
 function Paragraph({ children }: PropsWithChildren) {
@@ -49,11 +52,16 @@ const statusStyles = {
   },
 }
 
-export function Content({ insight }: ContentProps) {
+export function Content({ insight, className }: ContentProps) {
   const status = statusStyles[insight.feasibility.status] ?? null
 
   return (
-    <div className="lg:scrollbar-thin lg:max-h-93 lg:overflow-y-auto lg:pr-2 lg:[scrollbar-color:var(--border)_transparent]">
+    <div
+      className={twMerge(
+        "lg:scrollbar-thin lg:max-h-93 lg:overflow-y-auto lg:pr-2 lg:[scrollbar-color:var(--border)_transparent]",
+        className,
+      )}
+    >
       <section className="flex flex-col gap-2">
         <div className="flex flex-col items-start gap-2 sm:flex-row">
           <span className="text-foreground text-sm font-semibold">

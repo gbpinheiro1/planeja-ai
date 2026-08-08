@@ -1,9 +1,11 @@
 import type { LucideIcon } from "lucide-react"
 import type { ButtonHTMLAttributes } from "react"
+import { twMerge } from "tailwind-merge"
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant: "primary" | "secondary" | "ghost"
   Icon?: LucideIcon
+  IconSize?: string
 }
 
 const baseClasses =
@@ -18,16 +20,17 @@ const variantClasses = {
 export function Button({
   variant,
   Icon,
+  IconSize,
   children,
   className,
   ...props
 }: ButtonProps) {
   return (
     <button
-      className={[baseClasses, variantClasses[variant], className].join(" ")}
+      className={twMerge(baseClasses, variantClasses[variant], className)}
       {...props}
     >
-      {Icon && <Icon />}
+      {Icon && <Icon size={IconSize} />}
       {children}
     </button>
   )
