@@ -56,52 +56,54 @@ export function Content({ insight, className }: ContentProps) {
   const status = statusStyles[insight.feasibility.status] ?? null
 
   return (
-    <div
-      className={twMerge(
-        "lg:scrollbar-thin lg:max-h-93 lg:overflow-y-auto lg:pr-2 lg:[scrollbar-color:var(--border)_transparent]",
-        className,
-      )}
-    >
-      <section className="flex flex-col gap-2">
-        <div className="flex flex-col items-start gap-2 sm:flex-row">
-          <span className="text-foreground text-sm font-semibold">
-            🎯 Viabilidade da Meta
-          </span>
-          {status && (
-            <span
-              className={`w-fit rounded-full px-2.5 py-0.5 text-xs font-semibold ${status.className}`}
-            >
-              {status.label}
+    <>
+      <div
+        className={twMerge(
+          "lg:scrollbar-thin lg:max-h-93 lg:overflow-y-auto lg:pr-2 lg:[scrollbar-color:var(--border)_transparent]",
+          className,
+        )}
+      >
+        <section className="flex flex-col gap-2">
+          <div className="flex flex-col items-start gap-2 sm:flex-row">
+            <span className="text-foreground text-sm font-semibold">
+              🎯 Viabilidade da Meta
             </span>
-          )}
-        </div>
-        <Paragraph>{insight.feasibility.content}</Paragraph>
-      </section>
+            {status && (
+              <span
+                className={`w-fit rounded-full px-2.5 py-0.5 text-xs font-semibold ${status.className}`}
+              >
+                {status.label}
+              </span>
+            )}
+          </div>
+          <Paragraph>{insight.feasibility.content}</Paragraph>
+        </section>
 
-      <section>
-        <SectionTitle>💰 Diagnóstico Financeiro</SectionTitle>
-        <Paragraph>{insight.diagnosis.content}</Paragraph>
-      </section>
+        <section>
+          <SectionTitle>💰 Diagnóstico Financeiro</SectionTitle>
+          <Paragraph>{insight.diagnosis.content}</Paragraph>
+        </section>
 
-      <section>
-        <SectionTitle>📋 Sugestões Práticas</SectionTitle>
-        <OrderedList items={insight.suggestions.items} />
-      </section>
+        <section>
+          <SectionTitle>📋 Sugestões Práticas</SectionTitle>
+          <OrderedList items={insight.suggestions.items} />
+        </section>
 
-      <section>
-        <SectionTitle>💡 Como Aumentar sua Renda</SectionTitle>
-        <OrderedList items={insight.extraIncome.items} />
-      </section>
+        <section>
+          <SectionTitle>💡 Como Aumentar sua Renda</SectionTitle>
+          <OrderedList items={insight.extraIncome.items} />
+        </section>
 
-      <section>
-        <SectionTitle>🏦 Sugestões de Investimento</SectionTitle>
-        <OrderedList items={insight.investment.items} />
-      </section>
+        <section>
+          <SectionTitle>🏦 Sugestões de Investimento</SectionTitle>
+          <OrderedList items={insight.investment.items} />
+        </section>
 
-      <section>
-        <SectionTitle>🚀 Mensagem Final</SectionTitle>
-        <Paragraph>{insight.motivation.content}</Paragraph>
-      </section>
-    </div>
+        <section>
+          <SectionTitle>🚀 Mensagem Final</SectionTitle>
+          <Paragraph>{insight.motivation.content}</Paragraph>
+        </section>
+      </div>
+    </>
   )
 }

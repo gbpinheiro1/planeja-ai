@@ -3,7 +3,7 @@ import "react-loading-skeleton/dist/skeleton.css"
 import Skeleton from "react-loading-skeleton"
 
 import { useInsight } from "../../../hooks/useInsight"
-import { useState } from "react"
+import { useState, useRef, useEffect } from "react"
 
 import { Content } from "../insights/Content"
 import { Error } from "../insights/Error"
@@ -14,6 +14,7 @@ import { Send } from "lucide-react"
 import { ChatMessage } from "../../chat/ChatMessage"
 import { chatPrompt } from "../../../data/chatPrompt"
 import { callGeminiAPI } from "../../../services/aiChatService"
+import ChatTyping from "../../chat/ChatTyping"
 
 interface AIInsightCardProps {
   simulationId: string
@@ -30,6 +31,12 @@ export function AIInsightsCard({ simulationId }: AIInsightCardProps) {
 
   const [message, setMessage] = useState<string>("")
   const [chatHistory, setChatHistory] = useState<ChatEntry[]>([])
+  const chatEndRef = useRef<HTMLDivElement>(null)
+  const [isSending, setIsSending] = useState(false)
+
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: "smooth" })
+  }, [chatHistory, isSending])
 
   return (
     <div className="bg-card order-2 rounded-2xl p-6 shadow-[4px_4px_18px_0px_rgba(0,0,0,0.2)] lg:order-1 lg:col-span-2">
@@ -71,11 +78,16 @@ export function AIInsightsCard({ simulationId }: AIInsightCardProps) {
         chatHistory.map((cur, index) => (
           <ChatMessage message={cur.message} key={index} actor={cur.actor} />
         ))}
+
+      {isSending && <ChatTyping />}
+
+      <div ref={chatEndRef} />
       <div className="flex justify-around items-center mt-5 h-9 md:h-10 gap-2 order-last">
         <Input
           className="flex-1 h-full"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
+          disabled={isSending}
         />
         <Button
           type="button"
@@ -84,6 +96,7 @@ export function AIInsightsCard({ simulationId }: AIInsightCardProps) {
           IconSize="18"
           onClick={() => handleMessage()}
           className="justify-center rounded-xl aspect-square h-full p-0"
+          disabled={isSending}
         />
       </div>
     </div>
@@ -94,9 +107,16 @@ export function AIInsightsCard({ simulationId }: AIInsightCardProps) {
     setChatHistory((prev) => [...prev, { message: message, actor: "user" }])
     setMessage("")
     if (insight) {
-      const prompt = chatPrompt({ question: message, context: insight })
-      const response = await callGeminiAPI(prompt)
-      setChatHistory((prev) => [...prev, { message: response, actor: "a.i" }])
+      setIsSending(true)
+      try {
+        const prompt = chatPrompt({ question: message, context: insight })
+        const response = await callGeminiAPI(prompt)
+        setChatHistory((prev) => [...prev, { message: response, actor: "a.i" }])
+      } catch (error) {
+        console.error("Erro ao chamar a IA: ", error)
+      } finally {
+        setIsSending(false)
+      }
     }
   }
 }
