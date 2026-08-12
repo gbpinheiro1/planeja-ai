@@ -15,6 +15,7 @@ import { ChatMessage } from "../../chat/ChatMessage"
 import { chatPrompt } from "../../../data/chatPrompt"
 import { callGeminiAPI } from "../../../services/aiChatService"
 import ChatTyping from "../../chat/ChatTyping"
+import { useChatStorage } from "../../../hooks/useChatStorage"
 
 interface AIInsightCardProps {
   simulationId: string
@@ -28,15 +29,22 @@ interface ChatEntry {
 export function AIInsightsCard({ simulationId }: AIInsightCardProps) {
   const { insight, isLoading, error, fetchInsight } = useInsight(simulationId)
   console.log(insight)
+  const { getChatHistory, saveChatHistory } = useChatStorage()
 
   const [message, setMessage] = useState<string>("")
-  const [chatHistory, setChatHistory] = useState<ChatEntry[]>([])
+  const [chatHistory, setChatHistory] = useState<ChatEntry[]>(() =>
+    getChatHistory(simulationId),
+  )
   const chatEndRef = useRef<HTMLDivElement>(null)
   const [isSending, setIsSending] = useState(false)
 
   useEffect(() => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" })
   }, [chatHistory, isSending])
+
+  useEffect(() => {
+    saveChatHistory(simulationId, chatHistory)
+  }, [chatHistory, simulationId, saveChatHistory])
 
   return (
     <div className="bg-card order-2 rounded-2xl p-6 shadow-[4px_4px_18px_0px_rgba(0,0,0,0.2)] lg:order-1 lg:col-span-2">
